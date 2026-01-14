@@ -18,26 +18,16 @@ output "codebuild_role_arn" {
   value       = aws_iam_role.codebuild_role.arn
 }
 
-output "runner_labels" {
-  description = "Labels to use in GitHub Actions runs-on"
-  value       = ["codebuild", "aws", "self-hosted"]
-}
-
 output "setup_instructions" {
-  description = "Instructions to complete the setup"
-  value       = <<-EOT
-    
-    1. Activate the CodeConnection:
-       aws codestar-connections update-connection-status \
-         --connection-arn ${aws_codestarconnections_connection.github.arn} \
-         --status AVAILABLE
-    
-    2. In your GitHub repository, go to Settings > Secrets and Variables > Actions
-       Add the following repository variable:
-       - Name: AWS_CODEBUILD_PROJECT
-       - Value: ${aws_codebuild_project.github_actions_runner.name}
-    
-    3. Use in your workflow:
-       runs-on: codebuild, aws, self-hosted
-  EOT
+  description = "Instructions to complete the codeconnection setup"
+  value = trimspace(<<-EOF
+Activate the CodeConnection:
+  1. Go to: https://console.aws.amazon.com/codesuite/settings/connections
+  2. Find connection: "gha-runner-connection" (Status: Pending)
+  3. Click "Update pending connection"
+  4. Sign in to GitHub and authorize the AWS Connector app
+  5. Select the repositories to grant access
+  6. Click "Connect"
+EOF
+  )
 }

@@ -1,5 +1,3 @@
-# iam.tf
-# IAM role for CodeBuild
 resource "aws_iam_role" "codebuild_role" {
   name = "github-actions-runner-codebuild-role"
 
@@ -21,7 +19,6 @@ resource "aws_iam_role" "codebuild_role" {
   }
 }
 
-# Basic policies for CodeBuild
 resource "aws_iam_role_policy" "codebuild_policy" {
   role = aws_iam_role.codebuild_role.name
 

@@ -1,4 +1,11 @@
-# codebuild.tf
+resource "aws_codestarconnections_connection" "github" {
+  name          = "gha-runner-connection"
+  provider_type = "GitHub"
+
+  tags = {
+    Name = "gha-runner-connection"
+  }
+}
 resource "aws_codebuild_project" "github_actions_runner" {
   name          = "github-actions-runner"
   description   = "GitHub Actions runner on AWS CodeBuild"
@@ -47,7 +54,6 @@ resource "aws_codebuild_project" "github_actions_runner" {
   depends_on = [aws_iam_role_policy.codebuild_policy]
 }
 
-# GitHub webhook configuration
 resource "aws_codebuild_webhook" "github_actions" {
   project_name = aws_codebuild_project.github_actions_runner.name
   build_type   = "BUILD"
@@ -64,15 +70,6 @@ resource "aws_codebuild_source_credential" "github" {
   auth_type   = "CODECONNECTIONS"
   server_type = "GITHUB"
   token       = aws_codestarconnections_connection.github.arn
-}
-
-resource "aws_codestarconnections_connection" "github" {
-  name          = "gha-runner-connection"
-  provider_type = "GitHub"
-
-  tags = {
-    Name = "gha-runner-connection"
-  }
 }
 
 resource "aws_cloudwatch_log_group" "codebuild_logs" {

@@ -23,11 +23,6 @@ jobs:
           echo "GitHub SHA: $GITHUB_SHA"
           echo "GitHub Ref: $GITHUB_REF"
 
-      - name: Check AWS credentials
-        run: |
-          echo "Checking AWS identity..."
-          aws sts get-caller-identity
-
       - name: System info
         run: |
           echo "=== System Info ==="
