@@ -3,10 +3,7 @@ resource "aws_codebuild_project" "github_actions_runner" {
   name          = "github-actions-runner"
   description   = "GitHub Actions runner on AWS CodeBuild"
   service_role  = aws_iam_role.codebuild_role.arn
-  build_timeout = 30 # minutes
-
-  # Ensure IAM policy is attached before creating project
-  depends_on = [aws_iam_role_policy.codebuild_policy]
+  build_timeout = 30
 
   artifacts {
     type = "NO_ARTIFACTS"
@@ -46,6 +43,8 @@ resource "aws_codebuild_project" "github_actions_runner" {
       aws_security_group.codebuild_runners_sg.id
     ]
   }
+
+  depends_on = [aws_iam_role_policy.codebuild_policy]
 }
 
 # GitHub webhook configuration

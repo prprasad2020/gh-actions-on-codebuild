@@ -1,0 +1,44 @@
+name: Test CodeBuild Runner
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  test-runner:
+    runs-on:
+      - codebuild-github-actions-runner-${{ github.run_id }}-${{ github.run_attempt }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Print runner info
+        run: |
+          echo "🚀 Running on AWS CodeBuild!"
+          echo "Runner OS: $RUNNER_OS"
+          echo "GitHub SHA: $GITHUB_SHA"
+          echo "GitHub Ref: $GITHUB_REF"
+
+      - name: Check AWS credentials
+        run: |
+          echo "Checking AWS identity..."
+          aws sts get-caller-identity
+
+      - name: System info
+        run: |
+          echo "=== System Info ==="
+          uname -a
+          cat /etc/os-release || true
+          echo ""
+          echo "=== Docker Version ==="
+          docker --version || echo "Docker not available"
+          echo ""
+          echo "=== Available Memory ==="
+          free -h || true
+          echo ""
+          echo "=== Disk Space ==="
+          df -h
